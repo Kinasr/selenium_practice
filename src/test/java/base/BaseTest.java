@@ -4,18 +4,21 @@ import helper.PropertyReader;
 import helper.WebDriverFactory;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.WebDriver;
+import page.HomePage;
 
 import static helper.Constant.TEST_RESOURCES_PATH;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class BaseTests {
+public class BaseTest {
     private WebDriver driver;
+    protected HomePage homePage;
 
     @BeforeAll
     public void majorSetUp() {
         driver = WebDriverFactory.getDriver(
                 new PropertyReader(TEST_RESOURCES_PATH + "configuration/browser-config")
         );
+        homePage = new HomePage(driver);
     }
 
     @BeforeEach
