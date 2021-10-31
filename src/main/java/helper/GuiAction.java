@@ -173,12 +173,14 @@ public class GuiAction {
         return isSelected(element);
     }
 
+    //TODO: modify it to match the test runner "now it's for JUnit5"
     public void assertThat(String message, Runnable runnable) {
         var stepId = MyReport.startStep(this.getClass().getSimpleName(), message);
         runnable.run();
         MyReport.updateStepToBePassed(stepId);
     }
 
+    //TODO: modify it to match the test runner "now it's for JUnit5"
     public void performVerification(List<VerifyRecord> records) {
         var assertions = new ArrayList<Executable>();
 
@@ -198,6 +200,7 @@ public class GuiAction {
         Assertions.assertAll(assertions.stream());
     }
 
+    //TODO: modify it to match the test runner "now it's for JUnit5"
     public GuiAction startVerification(VerifyRecord record) {
         if (verifications.isEmpty()) verifications = new ArrayList<>();
 
@@ -206,6 +209,7 @@ public class GuiAction {
         return this;
     }
 
+    //TODO: modify it to match the test runner "now it's for JUnit5"
     public void verify() {
         if (!verifications.isEmpty()) {
             performVerification(verifications);
