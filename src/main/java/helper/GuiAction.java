@@ -5,6 +5,7 @@ import model.VerifyRecord;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.function.Executable;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -76,6 +77,7 @@ public class GuiAction {
         return getTextFrom(element);
     }
 
+    // -------------------------------------------------- Actions --------------------------------------------------
     public void rightClickOn(WebElement element) {
         wait.until(ExpectedConditions.elementToBeClickable(element));
         actions.contextClick(element).perform();
@@ -87,6 +89,51 @@ public class GuiAction {
         );
     }
 
+    public void dragAndDrop(WebElement fromElement, WebElement toElement) {
+        wait.until(ExpectedConditions.and(ExpectedConditions.visibilityOf(fromElement),
+                ExpectedConditions.visibilityOf(toElement)));
+
+        var javaScript = """
+                var src=arguments[0],tgt=arguments[1];
+                var dataTransfer={
+                    dropEffect:'',
+                    effectAllowed:'all',
+                    files:[],
+                    items:{},
+                    types:[],
+                    setData:
+                    function(format,data){
+                        this.items[format]=data;
+                        this.types.append(format);
+                        },
+                    getData:function(format){
+                        return this.items[format];
+                        },
+                    clearData:function(format){}
+                    };
+                var emit=function(event,target){
+                    var evt=document.createEvent('Event');
+                    evt.initEvent(event,true,false);
+                    evt.dataTransfer=dataTransfer;target.dispatchEvent(evt);
+                    };
+                emit('dragstart',src);
+                emit('dragenter',tgt);
+                emit('dragover',tgt);
+                emit('drop',tgt);
+                emit('dragend',src);
+                """;
+
+        ((JavascriptExecutor)driver).executeScript(javaScript, fromElement, toElement);
+    }
+
+    public void dragAndDrop(By from, By to) {
+        dragAndDrop(
+                driver.findElement(from),
+                driver.findElement(to)
+        );
+    }
+
+    // -------------------------------------------------- Alert --------------------------------------------------
     public void sendTextToAlert(String text) {
         wait.until(ExpectedConditions.alertIsPresent());
         driver.switchTo().alert().sendKeys(text);
@@ -111,9 +158,9 @@ public class GuiAction {
         }
     }
 
-    public boolean ensureElementDoesNotExist(By by) {
-        List<WebElement> elements = driver.findElements(by);
-        return elements.isEmpty();
+    public boolean isElementPresent(By by) {
+        var elements = driver.findElements(by);
+        return !elements.isEmpty();
     }
 
     public boolean isSelected(WebElement element) {
@@ -125,7 +172,6 @@ public class GuiAction {
         WebElement element = driver.findElement(by);
         return isSelected(element);
     }
-
 
     public void assertThat(String message, Runnable runnable) {
         var stepId = MyReport.startStep(this.getClass().getSimpleName(), message);
