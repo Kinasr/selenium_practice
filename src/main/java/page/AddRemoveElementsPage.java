@@ -7,7 +7,6 @@ import org.openqa.selenium.WebDriver;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class AddRemoveElementsPage {
-    private final WebDriver driver;
     private final GuiAction guiAction;
 
     private final By titleText = By.tagName("h3");
@@ -15,7 +14,6 @@ public class AddRemoveElementsPage {
     private final By elementsButtons = By.className("added-manually");
 
     public AddRemoveElementsPage(WebDriver driver) {
-        this.driver = driver;
         guiAction = new GuiAction(driver);
     }
 
@@ -50,13 +48,11 @@ public class AddRemoveElementsPage {
         return this;
     }
 
-    public AddRemoveElementsPage assertOnNumberOfAddedElements(int expectedSize) {
+    public void assertOnNumberOfAddedElements(int expectedSize) {
         var actualSize = guiAction.getElementsSize(elementsButtons);
         guiAction.assertThat(
                 "Checking the number of added elements to be: " + expectedSize,
                 () -> assertEquals(expectedSize, actualSize)
         );
-
-        return this;
     }
 }

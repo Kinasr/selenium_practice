@@ -7,13 +7,11 @@ import org.openqa.selenium.WebDriver;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ABTestingPage {
-    private final WebDriver driver;
     private final GuiAction guiAction;
 
     private final By titleText = By.tagName("h3");
 
     public ABTestingPage(WebDriver driver) {
-        this.driver = driver;
         guiAction = new GuiAction(driver);
     }
 

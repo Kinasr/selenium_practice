@@ -7,18 +7,17 @@ import org.openqa.selenium.WebDriver;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class BasicAuthPage {
+public class ContextMenuPage {
     private final GuiAction guiAction;
 
     private final By titleText = By.tagName("h3");
-    private final By body = By.tagName("body");
-    private final By messageLocator = By.tagName("p");
+    private final By context = By.id("hot-spot");
 
-    public BasicAuthPage(WebDriver driver) {
+    public ContextMenuPage(WebDriver driver) {
         guiAction = new GuiAction(driver);
     }
 
-    public BasicAuthPage assertOnPageTitle(String expectedTitle) {
+    public ContextMenuPage assertOnPageTitle(String expectedTitle) {
         var actualTitle = guiAction.getTextFrom(titleText);
         guiAction.assertThat(
                 "Checking the page title to be: " + expectedTitle,
@@ -27,17 +26,15 @@ public class BasicAuthPage {
         return this;
     }
 
-    public void assertThatBodyIsEmpty() {
-        guiAction.assertThat(
-                "Checking that the credentials are rejected",
-                () -> assertTrue(guiAction.getTextFrom(body).isEmpty())
-        );
+    public ContextMenuPage rightClickOnContext() {
+        guiAction.rightClickOn(context);
+        return this;
     }
 
-    public void assertThatTheLoginIsSuccess() {
+    public void assertThatAlertIsPresent() {
         guiAction.assertThat(
-                "Ensure that the login is success",
-                () -> assertTrue(guiAction.getTextFrom(messageLocator).contains("Congratulations!"))
+                "Ensure that the alert is present",
+                () -> assertTrue(guiAction.isAlertPresent())
         );
     }
 }

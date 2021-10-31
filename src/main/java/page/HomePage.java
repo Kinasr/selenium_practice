@@ -4,7 +4,9 @@ import helper.GuiAction;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
+import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class HomePage {
     private final WebDriver driver;
@@ -25,11 +27,11 @@ public class HomePage {
         AB_TESTING_PAGE("A/B Testing", ABTestingPage::new),
         ADD_REMOVE_ELEMENTS_PAGE("Add/Remove Elements", AddRemoveElementsPage::new),
         BASIC_AUTH_PAGE("Basic Auth", BasicAuthPage::new),
-        BROKEN_IMAGES_PAGE("Broken Images", BrokenImagesPage::new);
-//        CHALLENGING_DOM_PAGE("Challenging DOM", ChallengingDOMPage::new),
-//        CHECKBOXES_PAGE("Checkboxes", CheckboxesPage::new),
-//        CONTEXT_MENU_PAGE("Context Menu", ContextMenuPage::new),
-//        DIGEST_AUTHENTICATION_PAGE("Digest Authentication", DigestAuthenticationPage::new),
+        BROKEN_IMAGES_PAGE("Broken Images", BrokenImagesPage::new),
+        CHALLENGING_DOM_PAGE("Challenging DOM", ChallengingDOMPage::new),
+        CHECKBOXES_PAGE("Checkboxes", CheckboxesPage::new),
+        CONTEXT_MENU_PAGE("Context Menu", ContextMenuPage::new),
+        DIGEST_AUTHENTICATION_PAGE("Digest Authentication", DigestAuthenticationPage::new);
 //        DISAPPEARING_ELEMENTS_PAGE("Disappearing Elements", DisappearingElementsPage::new),
 //        DRAG_AND_DROP_PAGE("Drag and Drop", DragAndDropPage::new),
 //        DROPDOWN("Dropdown", DropdownPage::new),

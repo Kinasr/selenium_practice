@@ -7,6 +7,7 @@ import org.junit.jupiter.api.function.Executable;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import utility.MyReport;
@@ -18,11 +19,13 @@ import java.util.List;
 public class GuiAction {
     private final WebDriver driver;
     private final WebDriverWait wait;
-    private List<VerifyRecord> verifications;
+    private final Actions actions;
+    private List<VerifyRecord> verifications = new ArrayList<>();
 
     public GuiAction(WebDriver driver) {
         this.driver = driver;
         wait = new WebDriverWait(driver, Duration.ofSeconds(Constant.getWaitTime()));
+        actions = new Actions(driver);
     }
 
     public int getElementsSize(By by) {
@@ -31,6 +34,11 @@ public class GuiAction {
 
     public List<WebElement> getElements(By by) {
         return driver.findElements(by);
+    }
+
+    public WebElement waitForVisibility(WebElement element) {
+        wait.until(ExpectedConditions.visibilityOf(element));
+        return element;
     }
 
     public void clickOn(WebElement element) {
@@ -54,6 +62,10 @@ public class GuiAction {
         sendTextTo(element, text);
     }
 
+    public String getURL() {
+        return driver.getCurrentUrl();
+    }
+
     public String getTextFrom(WebElement element) {
         wait.until(ExpectedConditions.visibilityOf(element));
         return element.getText();
@@ -64,9 +76,39 @@ public class GuiAction {
         return getTextFrom(element);
     }
 
-    public WebElement waitForVisibility(WebElement element) {
-        wait.until(ExpectedConditions.visibilityOf(element));
-        return element;
+    public void rightClickOn(WebElement element) {
+        wait.until(ExpectedConditions.elementToBeClickable(element));
+        actions.contextClick(element).perform();
+    }
+
+    public void rightClickOn(By by) {
+        rightClickOn(
+                driver.findElement(by)
+        );
+    }
+
+    public void sendTextToAlert(String text) {
+        wait.until(ExpectedConditions.alertIsPresent());
+        driver.switchTo().alert().sendKeys(text);
+    }
+
+    public void acceptAlert() {
+        wait.until(ExpectedConditions.alertIsPresent());
+        driver.switchTo().alert().accept();
+    }
+
+    public boolean isAlertPresent(){
+        try{
+            var alert = wait.until(ExpectedConditions.alertIsPresent());
+            if(alert!=null){
+                return true;
+            }else{
+                throw new Throwable();
+            }
+        }
+        catch (Throwable e) {
+            return false;
+        }
     }
 
     public boolean ensureElementDoesNotExist(By by) {
@@ -74,9 +116,16 @@ public class GuiAction {
         return elements.isEmpty();
     }
 
-    public void sendTextToAlert(String text) {
-        driver.switchTo().alert();
+    public boolean isSelected(WebElement element) {
+        wait.until(ExpectedConditions.visibilityOf(element));
+        return element.isSelected();
     }
+
+    public boolean isSelected(By by) {
+        WebElement element = driver.findElement(by);
+        return isSelected(element);
+    }
+
 
     public void assertThat(String message, Runnable runnable) {
         var stepId = MyReport.startStep(this.getClass().getSimpleName(), message);

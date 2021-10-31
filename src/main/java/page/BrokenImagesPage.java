@@ -12,14 +12,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class BrokenImagesPage {
-    private final WebDriver driver;
     private final GuiAction guiAction;
 
     private final By titleText = By.tagName("h3");
     private final By imagesLocator = By.tagName("img");
 
     public BrokenImagesPage(WebDriver driver) {
-        this.driver = driver;
         guiAction = new GuiAction(driver);
     }
 
@@ -32,7 +30,7 @@ public class BrokenImagesPage {
         return this;
     }
 
-    public BrokenImagesPage assertThatNoBrokenImages() {
+    public void assertThatNoBrokenImages() {
         var images = guiAction.getElements(imagesLocator);
         var verifications = new ArrayList<VerifyRecord>();
 
@@ -47,6 +45,5 @@ public class BrokenImagesPage {
         }
 
         guiAction.performVerification(verifications);
-        return this;
     }
 }

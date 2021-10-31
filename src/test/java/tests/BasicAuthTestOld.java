@@ -7,12 +7,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.openqa.selenium.By;
 import page.BasicAuthPage;
 
 import static helper.Constant.TEST_RESOURCES_PATH;
 
-public class BasicAuthTest extends BaseTest {
+public class BasicAuthTestOld extends BaseTest {
     private String url;
 
     @Override
