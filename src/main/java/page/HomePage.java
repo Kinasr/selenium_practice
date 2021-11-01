@@ -33,8 +33,8 @@ public class HomePage {
         CONTEXT_MENU_PAGE("Context Menu", ContextMenuPage::new),
         DIGEST_AUTHENTICATION_PAGE("Digest Authentication", DigestAuthenticationPage::new),
         DISAPPEARING_ELEMENTS_PAGE("Disappearing Elements", DisappearingElementsPage::new),
-        DRAG_AND_DROP_PAGE("Drag and Drop", DragAndDropPage::new);
-//        DROPDOWN("Dropdown", DropdownPage::new),
+        DRAG_AND_DROP_PAGE("Drag and Drop", DragAndDropPage::new),
+        DROPDOWN("Dropdown", DropdownPage::new);
 //        DYNAMIC_CONTENT_PAGE("Dynamic Content", DynamicContentPage::new),
 //        DYNAMIC_CONTROLS_PAGE("Dynamic Controls", DynamicControlsPage::new),
 //        DYNAMIC_LOADING_PAGE("Dynamic Loading", DynamicLoadingPage::new),

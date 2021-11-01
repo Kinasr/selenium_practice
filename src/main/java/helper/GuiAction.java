@@ -10,7 +10,9 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import utility.MyLogger;
 import utility.MyReport;
 
 import java.time.Duration;
@@ -21,6 +23,7 @@ public class GuiAction {
     private final WebDriver driver;
     private final WebDriverWait wait;
     private final Actions actions;
+    private Select select;
     private List<VerifyRecord> verifications = new ArrayList<>();
 
     public GuiAction(WebDriver driver) {
@@ -123,7 +126,7 @@ public class GuiAction {
                 emit('dragend',src);
                 """;
 
-        ((JavascriptExecutor)driver).executeScript(javaScript, fromElement, toElement);
+        ((JavascriptExecutor) driver).executeScript(javaScript, fromElement, toElement);
     }
 
     public void dragAndDrop(By from, By to) {
@@ -131,6 +134,16 @@ public class GuiAction {
                 driver.findElement(from),
                 driver.findElement(to)
         );
+    }
+
+    // -------------------------------------------------- Select --------------------------------------------------
+    public Selection locateDropdown(WebElement element) {
+        wait.until(ExpectedConditions.visibilityOf(element));
+        return new Selection(element);
+    }
+
+    public Selection locateDropdown(By by) {
+        return locateDropdown(driver.findElement(by));
     }
 
     // -------------------------------------------------- Alert --------------------------------------------------
@@ -144,16 +157,15 @@ public class GuiAction {
         driver.switchTo().alert().accept();
     }
 
-    public boolean isAlertPresent(){
-        try{
+    public boolean isAlertPresent() {
+        try {
             var alert = wait.until(ExpectedConditions.alertIsPresent());
-            if(alert!=null){
+            if (alert != null) {
                 return true;
-            }else{
+            } else {
                 throw new Throwable();
             }
-        }
-        catch (Throwable e) {
+        } catch (Throwable e) {
             return false;
         }
     }
@@ -210,6 +222,48 @@ public class GuiAction {
         if (!verifications.isEmpty()) {
             performVerification(verifications);
             verifications.clear();
+        }
+    }
+
+    public static class Selection {
+        private final Select select;
+        private final List<WebElement> options;
+
+        public Selection(WebElement element) {
+            select = new Select(element);
+            options = select.getOptions();
+        }
+
+        public Selection selectByIndex(int index) {
+            if (index >= options.size()) {
+                MyLogger.severe(this.getClass().getSimpleName(),
+                        "Trying to access Option [" + index + "] which is out of boundary ["
+                                + options.size() + "]");
+                return null;
+            }
+            select.selectByIndex(index);
+            return this;
+        }
+
+        public Selection selectByValue(String value) {
+            select.selectByValue(value);
+            return this;
+        }
+
+        public Selection selectByText(String text) {
+            for (var option : options) {
+                if (option.getText().equals(text)) {
+                    select.selectByVisibleText(text);
+                    return this;
+                }
+            }
+            MyLogger.severe(this.getClass().getSimpleName(),
+                    "No such option [" + text + "]");
+            return null;
+        }
+
+        public String getSelectedOption() {
+            return select.getFirstSelectedOption().getText();
         }
     }
 }
