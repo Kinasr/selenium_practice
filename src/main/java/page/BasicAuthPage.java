@@ -1,6 +1,6 @@
 package page;
 
-import helper.GuiAction;
+import helper.actions.GuiAction;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 

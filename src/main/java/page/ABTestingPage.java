@@ -1,6 +1,6 @@
 package page;
 
-import helper.GuiAction;
+import helper.actions.GuiAction;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
@@ -19,7 +19,7 @@ public class ABTestingPage {
         var actualTitle = guiAction.getTextFrom(titleText);
         guiAction.assertThat(
                 "Checking the page title to be: " + expectedTitle,
-                () -> assertEquals(actualTitle, expectedTitle)
+                () -> assertEquals(expectedTitle, actualTitle)
         );
         return this;
     }

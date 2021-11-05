@@ -14,7 +14,7 @@ public class CheckboxesTest extends BaseTest {
                 .navigateTo(CHECKBOXES_PAGE);
 
         checkboxesPage
-                .assertOnPageTitle("Challenging DOM");
+                .assertOnPageTitle("Checkboxes");
 
         var firstCheckboxStatus = checkboxesPage
                 .getFirstCheckboxStatus();

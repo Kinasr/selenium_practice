@@ -1,6 +1,6 @@
 package page;
 
-import helper.GuiAction;
+import helper.actions.GuiAction;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
@@ -26,13 +26,13 @@ public class DropdownPage {
     }
 
     public DropdownPage selectOptionByText(String option) {
-        guiAction.locateDropdown(dropdownList)
+        guiAction.locateSelector(dropdownList)
                 .selectByText(option);
         return this;
     }
 
     public void assertThatTheRightOptionIsSelected(String expectedOption) {
-        var actualOption = guiAction.locateDropdown(dropdownList)
+        var actualOption = guiAction.locateSelector(dropdownList)
                 .getSelectedOption();
         guiAction.assertThat(
                 "Check that the selected option is: " + expectedOption,

@@ -10,10 +10,8 @@ public class ABTestingTest extends BaseTest {
 
     @Test
     public void testNavigationToABTestingPage() {
-        var abTestingPage = (ABTestingPage) homePage
-                .navigateTo(AB_TESTING_PAGE);
-
-        abTestingPage
+        ((ABTestingPage) homePage
+                .navigateTo(AB_TESTING_PAGE))
                 .assertOnPageTitle("A/B Test Control");
     }
 }

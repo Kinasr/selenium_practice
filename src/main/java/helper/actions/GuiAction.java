@@ -1,5 +1,6 @@
-package helper;
+package helper.actions;
 
+import helper.Constant;
 import io.qameta.allure.model.Status;
 import model.VerifyRecord;
 import org.junit.jupiter.api.Assertions;
@@ -12,7 +13,6 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import utility.MyLogger;
 import utility.MyReport;
 
 import java.time.Duration;
@@ -137,13 +137,13 @@ public class GuiAction {
     }
 
     // -------------------------------------------------- Select --------------------------------------------------
-    public Selection locateDropdown(WebElement element) {
+    public Selection locateSelector(WebElement element) {
         wait.until(ExpectedConditions.visibilityOf(element));
         return new Selection(element);
     }
 
-    public Selection locateDropdown(By by) {
-        return locateDropdown(driver.findElement(by));
+    public Selection locateSelector(By by) {
+        return locateSelector(driver.findElement(by));
     }
 
     // -------------------------------------------------- Alert --------------------------------------------------
@@ -185,6 +185,17 @@ public class GuiAction {
         return isSelected(element);
     }
 
+    public boolean isDisplayed(WebElement element) {
+        wait.until(ExpectedConditions.visibilityOf(element));
+        return element.isDisplayed();
+    }
+
+    public boolean isDisplayed(By by) {
+        return isDisplayed(
+                driver.findElement(by)
+        );
+    }
+
     public void assertThat(String message, Runnable runnable) {
         var stepId = MyReport.startStep(this.getClass().getSimpleName(), message);
         runnable.run();
@@ -222,48 +233,6 @@ public class GuiAction {
         if (!verifications.isEmpty()) {
             performVerification(verifications);
             verifications.clear();
-        }
-    }
-
-    public static class Selection {
-        private final Select select;
-        private final List<WebElement> options;
-
-        public Selection(WebElement element) {
-            select = new Select(element);
-            options = select.getOptions();
-        }
-
-        public Selection selectByIndex(int index) {
-            if (index >= options.size()) {
-                MyLogger.severe(this.getClass().getSimpleName(),
-                        "Trying to access Option [" + index + "] which is out of boundary ["
-                                + options.size() + "]");
-                return null;
-            }
-            select.selectByIndex(index);
-            return this;
-        }
-
-        public Selection selectByValue(String value) {
-            select.selectByValue(value);
-            return this;
-        }
-
-        public Selection selectByText(String text) {
-            for (var option : options) {
-                if (option.getText().equals(text)) {
-                    select.selectByVisibleText(text);
-                    return this;
-                }
-            }
-            MyLogger.severe(this.getClass().getSimpleName(),
-                    "No such option [" + text + "]");
-            return null;
-        }
-
-        public String getSelectedOption() {
-            return select.getFirstSelectedOption().getText();
         }
     }
 }
