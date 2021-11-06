@@ -54,10 +54,9 @@ public class DynamicContentPage {
             verifications.add(new VerifyRecord(
                     "Check that [" + image.getAttribute("src") + "] is Displayed",
                     guiAction.isDisplayed(image),
-                    () -> assertNotEquals("0", guiAction.isDisplayed(image))
+                    () -> assertTrue(guiAction.isDisplayed(image))
             ));
         }
-
         guiAction.performVerification(verifications);
 
         return this;

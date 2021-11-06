@@ -18,6 +18,8 @@ import utility.MyReport;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 public class GuiAction {
     private final WebDriver driver;
@@ -25,6 +27,11 @@ public class GuiAction {
     private final Actions actions;
     private Select select;
     private List<VerifyRecord> verifications = new ArrayList<>();
+
+    private final BiConsumer<WebDriverWait, WebElement> waitVisibilityOf = (wait, element) ->
+            wait.until(ExpectedConditions.visibilityOf(element));
+    private final BiConsumer<WebDriverWait, By> waitPresenceOf = (wait, by) ->
+            wait.until(ExpectedConditions.presenceOfElementLocated(by));
 
     public GuiAction(WebDriver driver) {
         this.driver = driver;
@@ -41,7 +48,7 @@ public class GuiAction {
     }
 
     public WebElement waitForVisibility(WebElement element) {
-        wait.until(ExpectedConditions.visibilityOf(element));
+        waitVisibilityOf.accept(wait, element);
         return element;
     }
 
@@ -51,19 +58,19 @@ public class GuiAction {
     }
 
     public void clickOn(By by) {
-        WebElement element = driver.findElement(by);
-        clickOn(element);
+        waitPresenceOf.accept(wait, by);
+        clickOn(driver.findElement(by));
     }
 
     public void sendTextTo(WebElement element, String text) {
-        wait.until(ExpectedConditions.visibilityOf(element));
+        waitVisibilityOf.accept(wait, element);
         element.clear();
         element.sendKeys(text);
     }
 
     public void sendTextTo(By by, String text) {
-        WebElement element = driver.findElement(by);
-        sendTextTo(element, text);
+        waitPresenceOf.accept(wait, by);
+        sendTextTo(driver.findElement(by), text);
     }
 
     public String getURL() {
@@ -71,13 +78,14 @@ public class GuiAction {
     }
 
     public String getTextFrom(WebElement element) {
-        wait.until(ExpectedConditions.visibilityOf(element));
+        waitVisibilityOf.accept(wait, element);
         return element.getText();
     }
 
     public String getTextFrom(By by) {
-        WebElement element = driver.findElement(by);
-        return getTextFrom(element);
+        waitPresenceOf.accept(wait, by);
+//        wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(by));
+        return getTextFrom(driver.findElement(by));
     }
 
     // -------------------------------------------------- Actions --------------------------------------------------
@@ -87,14 +95,13 @@ public class GuiAction {
     }
 
     public void rightClickOn(By by) {
-        rightClickOn(
-                driver.findElement(by)
-        );
+        waitPresenceOf.accept(wait, by);
+        rightClickOn(driver.findElement(by));
     }
 
     public void dragAndDrop(WebElement fromElement, WebElement toElement) {
-        wait.until(ExpectedConditions.and(ExpectedConditions.visibilityOf(fromElement),
-                ExpectedConditions.visibilityOf(toElement)));
+        waitVisibilityOf.accept(wait, fromElement);
+        waitVisibilityOf.accept(wait, toElement);
 
         var javaScript = """
                 var src=arguments[0],tgt=arguments[1];
@@ -130,23 +137,24 @@ public class GuiAction {
     }
 
     public void dragAndDrop(By from, By to) {
+        waitPresenceOf.accept(wait, from);
+        waitPresenceOf.accept(wait, to);
         dragAndDrop(
                 driver.findElement(from),
                 driver.findElement(to)
         );
     }
 
-    // -------------------------------------------------- Select --------------------------------------------------
     public Selection locateSelector(WebElement element) {
-        wait.until(ExpectedConditions.visibilityOf(element));
+        waitVisibilityOf.accept(wait, element);
         return new Selection(element);
     }
 
     public Selection locateSelector(By by) {
+        waitPresenceOf.accept(wait, by);
         return locateSelector(driver.findElement(by));
     }
 
-    // -------------------------------------------------- Alert --------------------------------------------------
     public void sendTextToAlert(String text) {
         wait.until(ExpectedConditions.alertIsPresent());
         driver.switchTo().alert().sendKeys(text);
@@ -171,29 +179,37 @@ public class GuiAction {
     }
 
     public boolean isElementPresent(By by) {
-        var elements = driver.findElements(by);
-        return !elements.isEmpty();
+        return ! driver.findElements(by).isEmpty();
     }
 
     public boolean isSelected(WebElement element) {
-        wait.until(ExpectedConditions.visibilityOf(element));
+        waitVisibilityOf.accept(wait, element);
         return element.isSelected();
     }
 
     public boolean isSelected(By by) {
-        WebElement element = driver.findElement(by);
-        return isSelected(element);
+        waitPresenceOf.accept(wait, by);
+        return isSelected(driver.findElement(by));
     }
 
     public boolean isDisplayed(WebElement element) {
-        wait.until(ExpectedConditions.visibilityOf(element));
+        waitVisibilityOf.accept(wait, element);
         return element.isDisplayed();
     }
 
     public boolean isDisplayed(By by) {
-        return isDisplayed(
-                driver.findElement(by)
-        );
+        waitPresenceOf.accept(wait, by);
+        return isDisplayed(driver.findElement(by));
+    }
+
+    public boolean isEnabled(WebElement element) {
+        waitVisibilityOf.accept(wait, element);
+        return element.isEnabled();
+    }
+
+    public boolean isEnabled(By by) {
+        waitPresenceOf.accept(wait, by);
+        return isEnabled(driver.findElement(by));
     }
 
     public void assertThat(String message, Runnable runnable) {
