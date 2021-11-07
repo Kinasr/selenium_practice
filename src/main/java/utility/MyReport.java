@@ -4,6 +4,7 @@ import io.qameta.allure.Allure;
 import io.qameta.allure.model.Status;
 import io.qameta.allure.model.StepResult;
 
+import java.io.InputStream;
 import java.util.UUID;
 
 public class MyReport {
@@ -48,5 +49,10 @@ public class MyReport {
     public static void attach(String title, String att) {
         MyLogger.info(title, att);
         Allure.addAttachment("Response", att);
+    }
+
+    public static void attachScreenshot(InputStream inputStream) {
+        MyLogger.info(MyLogger.class.getSimpleName(), "Attaching Screenshot to the Allure report");
+        Allure.addAttachment("screenshot", inputStream);
     }
 }
