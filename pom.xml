@@ -49,6 +49,12 @@
             <artifactId>junit-jupiter-params</artifactId>
             <version>${junit.jupiter.version}</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.junit.platform/junit-platform-launcher -->
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-launcher</artifactId>
+            <version>1.8.1</version>
+        </dependency>
         <!-- https://mvnrepository.com/artifact/io.qameta.allure/allure-junit-platform -->
         <dependency>
             <groupId>io.qameta.allure</groupId>

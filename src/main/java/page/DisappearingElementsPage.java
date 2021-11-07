@@ -41,11 +41,11 @@ public class DisappearingElementsPage {
     }
 
     public void ensureThatAllButtonsArePresent() {
-        var isHomePresent = guiAction.isElementPresent(homeButton);
-        var isAboutPresent = guiAction.isElementPresent(aboutButton);
-        var isContactUsPresent = guiAction.isElementPresent(contactUsButton);
-        var isPortfolioPresent = guiAction.isElementPresent(portfolioButton);
-        var isGalleryPresent = guiAction.isElementPresent(galleryButton);
+        var isHomePresent = guiAction.isPresent(homeButton);
+        var isAboutPresent = guiAction.isPresent(aboutButton);
+        var isContactUsPresent = guiAction.isPresent(contactUsButton);
+        var isPortfolioPresent = guiAction.isPresent(portfolioButton);
+        var isGalleryPresent = guiAction.isPresent(galleryButton);
         guiAction.performVerification(List.of(
                 new VerifyRecord(
                         "Ensure that the Home button is present",

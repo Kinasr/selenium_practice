@@ -3,8 +3,15 @@ package base;
 import helper.PropertyReader;
 import helper.WebDriverFactory;
 import org.junit.jupiter.api.*;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.io.FileHandler;
 import page.HomePage;
+
+import java.io.File;
+import java.io.IOException;
 
 import static helper.Constant.TEST_RESOURCES_PATH;
 

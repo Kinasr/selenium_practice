@@ -46,7 +46,7 @@ public class DynamicControlsPage {
     public DynamicControlsPage assertThatCheckboxIsAppear() {
         guiAction.assertThat(
                 "Ensure that the checkbox is appear",
-                () -> assertTrue(guiAction.isElementPresent(checkbox))
+                () -> assertTrue(guiAction.isPresent(checkbox))
         );
         return this;
     }

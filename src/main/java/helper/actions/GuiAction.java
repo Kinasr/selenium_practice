@@ -5,10 +5,7 @@ import io.qameta.allure.model.Status;
 import model.VerifyRecord;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.function.Executable;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
@@ -19,6 +16,7 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
 public class GuiAction {
@@ -28,9 +26,9 @@ public class GuiAction {
     private Select select;
     private List<VerifyRecord> verifications = new ArrayList<>();
 
-    private final BiConsumer<WebDriverWait, WebElement> waitVisibilityOf = (wait, element) ->
+    private final BiFunction<WebDriverWait, WebElement, WebElement> waitVisibilityOf = (wait, element) ->
             wait.until(ExpectedConditions.visibilityOf(element));
-    private final BiConsumer<WebDriverWait, By> waitPresenceOf = (wait, by) ->
+    private final BiFunction<WebDriverWait, By, WebElement> waitPresenceOf = (wait, by) ->
             wait.until(ExpectedConditions.presenceOfElementLocated(by));
 
     public GuiAction(WebDriver driver) {
@@ -48,7 +46,7 @@ public class GuiAction {
     }
 
     public WebElement waitForVisibility(WebElement element) {
-        waitVisibilityOf.accept(wait, element);
+        waitVisibilityOf.apply(wait, element);
         return element;
     }
 
@@ -58,18 +56,18 @@ public class GuiAction {
     }
 
     public void clickOn(By by) {
-        waitPresenceOf.accept(wait, by);
+        waitPresenceOf.apply(wait, by);
         clickOn(driver.findElement(by));
     }
 
     public void sendTextTo(WebElement element, String text) {
-        waitVisibilityOf.accept(wait, element);
+        waitVisibilityOf.apply(wait, element);
         element.clear();
         element.sendKeys(text);
     }
 
     public void sendTextTo(By by, String text) {
-        waitPresenceOf.accept(wait, by);
+        waitPresenceOf.apply(wait, by);
         sendTextTo(driver.findElement(by), text);
     }
 
@@ -78,13 +76,12 @@ public class GuiAction {
     }
 
     public String getTextFrom(WebElement element) {
-        waitVisibilityOf.accept(wait, element);
+        waitVisibilityOf.apply(wait, element);
         return element.getText();
     }
 
     public String getTextFrom(By by) {
-        waitPresenceOf.accept(wait, by);
-//        wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(by));
+        waitPresenceOf.apply(wait, by);
         return getTextFrom(driver.findElement(by));
     }
 
@@ -95,13 +92,13 @@ public class GuiAction {
     }
 
     public void rightClickOn(By by) {
-        waitPresenceOf.accept(wait, by);
+        waitPresenceOf.apply(wait, by);
         rightClickOn(driver.findElement(by));
     }
 
     public void dragAndDrop(WebElement fromElement, WebElement toElement) {
-        waitVisibilityOf.accept(wait, fromElement);
-        waitVisibilityOf.accept(wait, toElement);
+        waitVisibilityOf.apply(wait, fromElement);
+        waitVisibilityOf.apply(wait, toElement);
 
         var javaScript = """
                 var src=arguments[0],tgt=arguments[1];
@@ -137,8 +134,8 @@ public class GuiAction {
     }
 
     public void dragAndDrop(By from, By to) {
-        waitPresenceOf.accept(wait, from);
-        waitPresenceOf.accept(wait, to);
+        waitPresenceOf.apply(wait, from);
+        waitPresenceOf.apply(wait, to);
         dragAndDrop(
                 driver.findElement(from),
                 driver.findElement(to)
@@ -146,12 +143,12 @@ public class GuiAction {
     }
 
     public Selection locateSelector(WebElement element) {
-        waitVisibilityOf.accept(wait, element);
+        waitVisibilityOf.apply(wait, element);
         return new Selection(element);
     }
 
     public Selection locateSelector(By by) {
-        waitPresenceOf.accept(wait, by);
+        waitPresenceOf.apply(wait, by);
         return locateSelector(driver.findElement(by));
     }
 
@@ -178,37 +175,42 @@ public class GuiAction {
         }
     }
 
-    public boolean isElementPresent(By by) {
-        return ! driver.findElements(by).isEmpty();
+    public boolean isPresent(By by) {
+        try {
+            waitPresenceOf.apply(wait, by);
+            return true;
+        } catch (TimeoutException e){
+            return false;
+        }
     }
 
     public boolean isSelected(WebElement element) {
-        waitVisibilityOf.accept(wait, element);
+        waitVisibilityOf.apply(wait, element);
         return element.isSelected();
     }
 
     public boolean isSelected(By by) {
-        waitPresenceOf.accept(wait, by);
+        waitPresenceOf.apply(wait, by);
         return isSelected(driver.findElement(by));
     }
 
     public boolean isDisplayed(WebElement element) {
-        waitVisibilityOf.accept(wait, element);
+        waitVisibilityOf.apply(wait, element);
         return element.isDisplayed();
     }
 
     public boolean isDisplayed(By by) {
-        waitPresenceOf.accept(wait, by);
+        waitPresenceOf.apply(wait, by);
         return isDisplayed(driver.findElement(by));
     }
 
     public boolean isEnabled(WebElement element) {
-        waitVisibilityOf.accept(wait, element);
+        waitVisibilityOf.apply(wait, element);
         return element.isEnabled();
     }
 
     public boolean isEnabled(By by) {
-        waitPresenceOf.accept(wait, by);
+        waitPresenceOf.apply(wait, by);
         return isEnabled(driver.findElement(by));
     }
 

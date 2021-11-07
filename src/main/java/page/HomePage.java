@@ -35,11 +35,11 @@ public class HomePage {
         DROPDOWN("Dropdown", DropdownPage::new),
         DYNAMIC_CONTENT_PAGE("Dynamic Content", DynamicContentPage::new),
         DYNAMIC_CONTROLS_PAGE("Dynamic Controls", DynamicControlsPage::new),
-        DYNAMIC_LOADING_PAGE("Dynamic Loading", DynamicLoadingPage::new);
+        DYNAMIC_LOADING_PAGE("Dynamic Loading", DynamicLoadingPage::new),
 //        ENTRY_AD_PAGE("Entry Ad", EntryAdPage::new),
 //        EXIT_INTENT_PAGE("Exit Intent", ExitIntentPage::new),
 //        FILE_DOWNLOAD_PAGE("File Download", FileDownloadPage::new),
-//        FILE_UPLOAD_PAGE("File Upload", FileUploadPage::new),
+        FILE_UPLOAD_PAGE("File Upload", FileUploadPage::new);
 //        FLOATING_MENU_PAGE("Floating Menu", FloatingMenuPage::new),
 //        FORGOT_PASSWORD_PAGE("Forgot Password", ForgotPasswordPage::new),
 //        FORM_AUTHENTICATION_PAGE("Form Authentication", FormAuthenticationPage::new),
